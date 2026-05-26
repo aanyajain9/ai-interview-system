@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Interview</title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:0;
+            font-family:Arial;
+            background:#0f172a;
+            color:white;
+        }
+
+        .chat-container{
+
+            width:70%;
+            margin:auto;
+            margin-top:50px;
+        }
+
+        .chat-box{
+
+            background:#1e293b;
+            padding:20px;
+            border-radius:15px;
+
+            min-height:400px;
+        }
+
+        .ai-message{
+
+            background:#334155;
+            padding:15px;
+            border-radius:10px;
+
+            width:70%;
+            margin-bottom:20px;
+        }
+
+        .user-message{
+
+            background:#2563eb;
+            padding:15px;
+            border-radius:10px;
+
+            width:70%;
+            margin-left:auto;
+            margin-bottom:20px;
+        }
+
+        .input-area{
+
+            margin-top:20px;
+            display:flex;
+            gap:10px;
+        }
+
+        input{
+
+            flex:1;
+            padding:14px;
+            border:none;
+            border-radius:8px;
+        }
+
+        button{
+
+            padding:14px 25px;
+
+            border:none;
+            border-radius:8px;
+
+            background:#3b82f6;
+            color:white;
+
+            cursor:pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="chat-container">
+
+        <h1>AI Mock Interview</h1>
+
+        <div class="chat-box">
+
+            <div class="ai-message">
+                Tell me about yourself.
+            </div>
+
+            {% if user_answer %}
+
+            <div class="user-message">
+                {{ user_answer }}
+            </div>
+
+            {% endif %}
+
+            {% if ai_reply %}
+
+            <div class="ai-message">
+                {{ ai_reply }}
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+        <form action="/interview" method="POST">
+
+            <div class="input-area">
+
+                <input type="text"
+                       name="answer"
+                       placeholder="Type your answer..."
+                       required>
+
+                <button type="submit">
+                    Send
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

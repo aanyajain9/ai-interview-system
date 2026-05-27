@@ -30,28 +30,37 @@
             padding:20px;
             border-radius:15px;
 
-            min-height:400px;
+            height:500px;
+
+            overflow-y:auto;
+
+            display:flex;
+            flex-direction:column;
+
+            gap:15px;
         }
 
         .ai-message{
 
             background:#334155;
             padding:15px;
-            border-radius:10px;
+            border-radius:15px;
 
             width:70%;
-            margin-bottom:20px;
-        }
 
+            line-height:1.5;
+        }
         .user-message{
 
             background:#2563eb;
             padding:15px;
-            border-radius:10px;
+            border-radius:15px;
 
             width:70%;
+
             margin-left:auto;
-            margin-bottom:20px;
+
+            line-height:1.5;
         }
 
         .input-area{
@@ -98,23 +107,23 @@
                 Tell me about yourself.
             </div>
 
-            {% if user_answer %}
+        {% for chat in chat_history %}
 
-            <div class="user-message">
-                {{ user_answer }}
-            </div>
+            {% if chat.type == "user" %}
+
+                <div class="user-message">
+                    {{ chat.message }}
+                </div>
+
+            {% else %}
+
+                <div class="ai-message">
+                    {{ chat.message }}
+                </div>
 
             {% endif %}
 
-            {% if ai_reply %}
-
-            <div class="ai-message">
-                {{ ai_reply }}
-            </div>
-
-            {% endif %}
-
-
+        {% endfor %}    
         </div>
 
         <form action="/interview" method="POST">

@@ -1,15 +1,19 @@
 from flask import Flask, render_template, request
-import google.generativeai as genai
+from google import genai
+from dotenv import load_dotenv
 import os
 
+# load env file
+load_dotenv()
 
 app = Flask(__name__)
-genai.configure(
+
+# Gemini client
+client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
 )
-model = genai.GenerativeModel(
-    "models/gemini-1.5-flash"
-)
+
+# chat history
 chat_history = []
 
 # question list
@@ -27,7 +31,9 @@ questions = [
 
 ]
 
+# question tracker
 question_index = 0
+
 
 @app.route("/")
 def home():
@@ -40,63 +46,66 @@ def interview():
 
     global question_index
 
+    # first AI question
     if len(chat_history) == 0:
-        chat_history.append([{
+
+        chat_history.append({
             "type": "ai",
             "message": questions[question_index]
-        }])
-        question_index=question_index+1
+        })
+
+        question_index += 1
 
     if request.method == "POST":
 
         user_answer = request.form["answer"]
 
-        # user message
+        # save user message
         chat_history.append({
             "type": "user",
             "message": user_answer
         })
 
-        # simple answer checking
-
+        # short answer check
         if len(user_answer) < 10:
 
-            feedback = "Your answer is too short. Try explaining more."
+            ai_reply = "Your answer is too short. Try explaining more."
 
         else:
 
             prompt = f"""
             You are an AI interviewer.
 
-            Ask interview questions.
             Check the user's answer.
             Give feedback.
-            Then ask next question.
+            Then ask the next interview question.
 
             User Answer:
             {user_answer}
+
+            Next Question:
+            {questions[question_index]}
             """
 
-            response = model.generate_content(prompt)
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt
+            )
+
             ai_reply = response.text
 
-
-        # next question
-        next_question = questions[question_index]
-
-        ai_reply = f"{feedback}\n\nNext Question: {next_question}"
-
-        # ai message
+        # save AI reply
         chat_history.append({
             "type": "ai",
             "message": ai_reply
         })
 
-        # next index
+        # next question
         question_index += 1
 
-        # restart questions
+        # restart question list
         if question_index >= len(questions):
+
             question_index = 0
 
     return render_template(

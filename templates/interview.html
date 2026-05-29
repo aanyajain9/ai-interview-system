@@ -7,6 +7,8 @@
 
     <title>Interview</title>
 
+    
+
     <style>
 
         body{
@@ -100,12 +102,11 @@
     <div class="chat-container">
 
         <h1>AI Mock Interview</h1>
+        <h2>Score: {{ score }}</h2>
 
         <div class="chat-box">
 
-            <div class="ai-message">
-                Tell me about yourself.
-            </div>
+            
 
         {% for chat in chat_history %}
 
@@ -126,7 +127,7 @@
         {% endfor %}    
         </div>
 
-        <form action="/interview" method="POST">
+        <form method="POST">
 
             <div class="input-area">
 

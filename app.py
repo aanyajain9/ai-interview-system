@@ -1,14 +1,11 @@
-
-
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request , redirect
 
 app = Flask(__name__)
 
-# chat history
 chat_history = []
 
-# Python questions
+current_category = ""
+
 python_questions = [
     "What is Python?",
     "Explain OOP.",
@@ -30,34 +27,42 @@ hr_questions = [
     "Where do you see yourself in 5 years?"
 ]
 
-# trackers
 question_index = 0
 score = 0
 
 
 @app.route("/")
 def home():
+
+    global chat_history
+    global question_index
+    global score
+
+    chat_history = []
+    question_index = 0
+    score = 0
+
     return render_template("dashboard.html")
 
 
 @app.route("/interview/<category>", methods=["GET", "POST"])
 def interview(category):
-    if category == "python":
 
-        questions = python_questions
-
-    elif category == "sql":
-
-        questions = sql_questions
-
-    else:
-
-        questions = hr_questions
+    global current_category
+    current_category = category
 
     global question_index
     global score
 
-    # first AI question
+    if category == "python":
+        questions = python_questions
+
+    elif category == "sql":
+        questions = sql_questions
+
+    else:
+        questions = hr_questions
+
     if len(chat_history) == 0:
 
         chat_history.append({
@@ -71,13 +76,11 @@ def interview(category):
 
         user_answer = request.form["answer"]
 
-        # save user message
         chat_history.append({
             "type": "user",
             "message": user_answer
         })
 
-        # scoring
         if len(user_answer) < 20:
 
             ai_reply = "Your answer is too short. Try explaining more."
@@ -88,7 +91,6 @@ def interview(category):
 
             ai_reply = f"Good answer! 🎉\nCurrent Score: {score}"
 
-        # next question
         if question_index < len(questions):
 
             ai_reply += f"\n\nNext Question:\n{questions[question_index]}"
@@ -97,18 +99,47 @@ def interview(category):
 
         else:
 
-            ai_reply += "\n\nInterview Completed! 🎉"
-
-        # save AI reply
+            return redirect("/result")
         chat_history.append({
             "type": "ai",
             "message": ai_reply
         })
 
+    answered_questions = max(question_index - 1, 0)
+
+    progress = min(
+        int((answered_questions / len(questions)) * 100),
+        100
+    )
+
+    
     return render_template(
         "interview.html",
         chat_history=chat_history,
-        score=score
+        score=score,
+        progress=progress
+    )
+
+
+@app.route("/result")
+def result():
+
+    global score
+
+    if score >= 30:
+        performance = "Excellent ⭐"
+
+    elif score >= 20:
+        performance = "Good 👍"
+
+    else:
+        performance = "Needs Improvement 📚"
+
+    return render_template(
+        "result.html",
+        score=score,
+        performance=performance,
+        category=current_category
     )
 
 

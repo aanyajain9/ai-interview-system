@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Interview History</title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:0;
+            font-family:Arial, sans-serif;
+            background:#0f172a;
+            color:white;
+        }
+
+        .container{
+
+            width:85%;
+            margin:auto;
+            padding-top:50px;
+            text-align:center;
+        }
+
+        h1{
+
+            font-size:45px;
+            margin-bottom:30px;
+        }
+
+        .table-box{
+
+            background:#1e293b;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0px 0px 20px rgba(0,0,0,0.4);
+        }
+
+        table{
+
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th{
+
+            background:#3b82f6;
+            color:white;
+            padding:15px;
+            font-size:18px;
+        }
+
+        td{
+
+            padding:15px;
+            border-bottom:1px solid #334155;
+        }
+
+        tr:hover{
+
+            background:#334155;
+        }
+
+        .excellent{
+
+            color:#22c55e;
+            font-weight:bold;
+        }
+
+        .good{
+
+            color:#facc15;
+            font-weight:bold;
+        }
+
+        .improve{
+
+            color:#ef4444;
+            font-weight:bold;
+        }
+
+        .btn{
+
+            display:inline-block;
+
+            margin-top:25px;
+
+            padding:12px 25px;
+
+            background:#3b82f6;
+
+            color:white;
+
+            text-decoration:none;
+
+            border-radius:8px;
+        }
+
+        .btn:hover{
+
+            background:#2563eb;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>📊 Interview History</h1>
+
+        <div class="table-box">
+
+            <table>
+
+                <tr>
+
+                    <th>Category</th>
+                    <th>Score</th>
+                    <th>Performance</th>
+
+                </tr>
+
+                {% for row in records %}
+
+                <tr>
+
+                    <td>{{ row[0] }}</td>
+
+                    <td>{{ row[1] }}</td>
+
+                    <td>
+
+                        {% if "Excellent" in row[2] %}
+
+                            <span class="excellent">
+                                {{ row[2] }}
+                            </span>
+
+                        {% elif "Good" in row[2] %}
+
+                            <span class="good">
+                                {{ row[2] }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="improve">
+                                {{ row[2] }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+        <a href="/" class="btn">
+            ⬅ Back to Dashboard
+        </a>
+
+    </div>
+
+</body>
+
+</html>

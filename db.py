@@ -24,4 +24,11 @@ def save_result(category, score, performance):
     conn.commit()
 
 def get_history():
-    pass
+
+    cursor.execute("""
+        SELECT category, score, performance
+        FROM interview_history
+        ORDER BY id DESC
+    """)
+
+    return cursor.fetchall()

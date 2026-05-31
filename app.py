@@ -1,4 +1,4 @@
-from db import save_result
+from db import save_result, get_history
 from flask import Flask, render_template, request , redirect
 
 app = Flask(__name__)
@@ -151,7 +151,13 @@ def result():
 
 @app.route("/history")
 def history():
-    pass
+
+    records = get_history()
+
+    return render_template(
+        "history.html",
+        records=records
+    )
 
 
 if __name__ == "__main__":

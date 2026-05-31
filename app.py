@@ -1,3 +1,4 @@
+from db import save_result
 from flask import Flask, render_template, request , redirect
 
 app = Flask(__name__)
@@ -135,12 +136,22 @@ def result():
     else:
         performance = "Needs Improvement 📚"
 
+    save_result(
+    current_category,
+    score,
+    performance
+    )
+
     return render_template(
         "result.html",
         score=score,
         performance=performance,
         category=current_category
     )
+
+@app.route("/history")
+def history():
+    pass
 
 
 if __name__ == "__main__":

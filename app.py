@@ -1,5 +1,7 @@
 from db import save_result, get_history
 from flask import Flask, render_template, request , redirect
+import os
+from PyPDF2 import PdfReader
 
 app = Flask(__name__)
 
@@ -159,6 +161,59 @@ def history():
         records=records
     )
 
+
+@app.route("/resume")
+def resume():
+    return render_template("resume.html")
+
+
+@app.route("/upload", methods=["POST"])
+def upload():
+
+    file = request.files["resume"]
+
+    filepath = os.path.join(
+        "uploads",
+        file.filename
+    )
+
+    file.save(filepath)
+
+    pdf = PdfReader(filepath)
+
+    text = ""
+
+    for page in pdf.pages:
+
+        text += page.extract_text()
+
+    skills_list = [
+        "Python",
+        "SQL",
+        "Machine Learning",
+        "Data Science",
+        "Java",
+        "Flask",
+        "Pandas",
+        "NumPy",
+        "MySQL",
+        "HTML",
+        "CSS",
+        "JavaScript"
+    ]
+    detected_skills = []
+
+    for skill in skills_list:
+
+        if skill.lower() in text.lower():
+
+            detected_skills.append(skill)
+
+    return render_template(
+        "resumeresult.html",
+        resume_text=text,
+        skills=detected_skills
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

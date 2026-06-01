@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Analysis</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
+
+        body{
+
+            background:#0f172a;
+            color:white;
+            min-height:100vh;
+        }
+
+        .navbar{
+
+            background:#1e293b;
+
+            padding:20px 40px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+        }
+
+        .navbar a{
+
+            color:white;
+
+            text-decoration:none;
+
+            margin-left:20px;
+        }
+
+        .navbar a:hover{
+
+            color:#3b82f6;
+        }
+
+        .container{
+
+            width:85%;
+            margin:auto;
+            padding-top:40px;
+        }
+
+        .card{
+
+            background:#1e293b;
+
+            padding:30px;
+
+            border-radius:20px;
+
+            margin-bottom:30px;
+
+            box-shadow:0 0 20px rgba(0,0,0,0.4);
+        }
+
+        h1{
+
+            margin-bottom:20px;
+        }
+
+        .skills{
+
+            display:flex;
+
+            flex-wrap:wrap;
+
+            gap:15px;
+        }
+
+        .skill{
+
+            background:#22c55e;
+
+            color:white;
+
+            padding:10px 18px;
+
+            border-radius:25px;
+
+            font-weight:bold;
+        }
+
+        .resume-box{
+
+            background:#334155;
+
+            padding:20px;
+
+            border-radius:15px;
+
+            max-height:400px;
+
+            overflow-y:auto;
+
+            line-height:1.6;
+        }
+
+        .btn{
+
+            display:inline-block;
+
+            margin-top:20px;
+
+            padding:12px 25px;
+
+            background:#3b82f6;
+
+            color:white;
+
+            text-decoration:none;
+
+            border-radius:10px;
+        }
+
+        .btn:hover{
+
+            background:#2563eb;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <h2>AI Interview System</h2>
+
+        <div>
+
+            <a href="/">🏠 Home</a>
+
+            <a href="/history">📊 History</a>
+
+            <a href="/resume">📄 Upload Resume</a>
+
+        </div>
+
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>🎯 Detected Skills</h1>
+
+            <div class="skills">
+
+                {% for skill in skills %}
+
+                    <div class="skill">
+                        ✅ {{ skill }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h1>📄 Resume Content</h1>
+
+            <div class="resume-box">
+
+                <pre>{{ resume_text }}</pre>
+
+            </div>
+
+        </div>
+
+        <a href="/resume" class="btn">
+            Upload Another Resume
+        </a>
+
+    </div>
+
+</body>
+
+</html>

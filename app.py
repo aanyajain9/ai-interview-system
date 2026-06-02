@@ -2,6 +2,7 @@ from db import save_result, get_history
 from flask import Flask, render_template, request , redirect
 import os
 from PyPDF2 import PdfReader
+from db import save_result, get_history, get_stats
 
 app = Flask(__name__)
 
@@ -36,6 +37,11 @@ score = 0
 
 @app.route("/")
 def home():
+    stats = get_stats()
+
+    total_interviews = stats[0]
+    highest_score = stats[1] if stats[1] else 0
+    average_score = round(stats[2], 2) if stats[2] else 0
 
     global chat_history
     global question_index
@@ -45,7 +51,12 @@ def home():
     question_index = 0
     score = 0
 
-    return render_template("dashboard.html")
+    return render_template(
+    "dashboard.html",
+    total_interviews=total_interviews,
+    highest_score=highest_score,
+    average_score=average_score
+)
 
 
 @app.route("/interview/<category>", methods=["GET", "POST"])
@@ -209,10 +220,28 @@ def upload():
 
             detected_skills.append(skill)
 
+    total_skills = len(detected_skills)
+
+    recommended_category = "HR"
+
+    if "Python" in detected_skills:
+
+        recommended_category = "Python"
+
+    elif "SQL" in detected_skills:
+
+        recommended_category = "SQL"
+
+    elif "Machine Learning" in detected_skills:
+
+        recommended_category = "Machine Learning"
+
     return render_template(
         "resumeresult.html",
         resume_text=text,
-        skills=detected_skills
+        skills=detected_skills,
+        recommended_category=recommended_category,
+        total_skills=total_skills
     )
 
 if __name__ == "__main__":

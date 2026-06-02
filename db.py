@@ -32,3 +32,14 @@ def get_history():
     """)
 
     return cursor.fetchall()
+def get_stats():
+
+    cursor.execute("""
+        SELECT
+        COUNT(*),
+        MAX(score),
+        AVG(score)
+        FROM interview_history
+    """)
+
+    return cursor.fetchone()

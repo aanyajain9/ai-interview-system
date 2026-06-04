@@ -43,3 +43,14 @@ def get_stats():
     """)
 
     return cursor.fetchone()
+
+def get_top_scores():
+
+    cursor.execute("""
+        SELECT category, score
+        FROM interview_history
+        ORDER BY score DESC
+        LIMIT 5
+    """)
+
+    return cursor.fetchall()

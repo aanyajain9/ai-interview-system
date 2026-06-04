@@ -3,6 +3,7 @@ from flask import Flask, render_template, request , redirect
 import os
 from PyPDF2 import PdfReader
 from db import save_result, get_history, get_stats
+from db import get_top_scores
 
 app = Flask(__name__)
 
@@ -50,13 +51,15 @@ def home():
     chat_history = []
     question_index = 0
     score = 0
+    total, highest, average = get_stats()
 
     return render_template(
-    "dashboard.html",
-    total_interviews=total_interviews,
-    highest_score=highest_score,
-    average_score=average_score
+        "dashboard.html",
+        total=total,
+        highest=highest,
+        average=round(average or 0, 2)
 )
+
 
 
 @app.route("/interview/<category>", methods=["GET", "POST"])
@@ -155,12 +158,43 @@ def result():
     performance
     )
 
+    if score >= 30:
+
+        performance = "Excellent ⭐"
+
+        feedback = """
+        Strong communication skills.
+        Good technical understanding.
+        Interview ready.
+        """
+
+    elif score >= 20:
+
+        performance = "Good 👍"
+
+        feedback = """
+        Good fundamentals.
+        Improve confidence and explanation.
+        Practice more interviews.
+        """
+
+    else:
+
+        performance = "Needs Improvement 📚"
+
+        feedback = """
+        Work on technical concepts.
+        Give detailed answers.
+        Improve communication.
+        """
+
     return render_template(
-        "result.html",
-        score=score,
-        performance=performance,
-        category=current_category
-    )
+    "result.html",
+    score=score,
+    performance=performance,
+    feedback=feedback,
+    category=current_category
+)
 
 @app.route("/history")
 def history():
@@ -242,6 +276,17 @@ def upload():
         skills=detected_skills,
         recommended_category=recommended_category,
         total_skills=total_skills
+    )
+
+
+@app.route("/leaderboard")
+def leaderboard():
+
+    scores = get_top_scores()
+
+    return render_template(
+        "leaderboard.html",
+        scores=scores
     )
 
 if __name__ == "__main__":

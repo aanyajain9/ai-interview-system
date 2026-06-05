@@ -1,6 +1,6 @@
-import ollama_test
+import ollama
 
-response = ollama_test.chat(
+response = ollama.chat(
     model="llama3",
     messages=[
         {

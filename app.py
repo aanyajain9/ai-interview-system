@@ -3,7 +3,7 @@ from flask import Flask, render_template, request , redirect
 import os
 from PyPDF2 import PdfReader
 from db import save_result, get_history, get_stats
-from db import get_top_scores
+
 
 app = Flask(__name__)
 
@@ -157,43 +157,11 @@ def result():
     score,
     performance
     )
-
-    if score >= 30:
-
-        performance = "Excellent ⭐"
-
-        feedback = """
-        Strong communication skills.
-        Good technical understanding.
-        Interview ready.
-        """
-
-    elif score >= 20:
-
-        performance = "Good 👍"
-
-        feedback = """
-        Good fundamentals.
-        Improve confidence and explanation.
-        Practice more interviews.
-        """
-
-    else:
-
-        performance = "Needs Improvement 📚"
-
-        feedback = """
-        Work on technical concepts.
-        Give detailed answers.
-        Improve communication.
-        """
-
+    
     return render_template(
     "result.html",
     score=score,
     performance=performance,
-    feedback=feedback,
-    category=current_category
 )
 
 @app.route("/history")
@@ -278,16 +246,6 @@ def upload():
         total_skills=total_skills
     )
 
-
-@app.route("/leaderboard")
-def leaderboard():
-
-    scores = get_top_scores()
-
-    return render_template(
-        "leaderboard.html",
-        scores=scores
-    )
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,6 +3,7 @@ from flask import Flask, render_template, request , redirect
 import os
 from PyPDF2 import PdfReader
 from db import save_result, get_history, get_stats
+import ollama
 
 
 app = Flask(__name__)
@@ -33,6 +34,8 @@ hr_questions = [
 ]
 
 question_index = 0
+
+current_question = ""
 score = 0
 
 
@@ -175,9 +178,32 @@ def history():
     )
 
 
+@app.route("/test-ai")
+def test_ai():
+
+    question = generate_question("Python")
+
+    return question
+
 @app.route("/resume")
 def resume():
     return render_template("resume.html")
+
+
+
+def generate_question(topic):
+
+    response = ollama.chat(
+        model="llama3",
+        messages=[
+            {
+                "role": "user",
+                "content": f"Ask one {topic} interview question only."
+            }
+        ]
+    )
+
+    return response["message"]["content"]
 
 
 @app.route("/upload", methods=["POST"])

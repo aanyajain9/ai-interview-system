@@ -12,6 +12,9 @@ chat_history = []
 
 current_category = ""
 
+
+question_count = 0
+
 python_questions = [
     "What is Python?",
     "Explain OOP.",
@@ -74,23 +77,18 @@ def interview(category):
     global question_index
     global score
 
-    if category == "python":
-        questions = python_questions
-
-    elif category == "sql":
-        questions = sql_questions
-
-    else:
-        questions = hr_questions
 
     if len(chat_history) == 0:
 
+        ai_question = generate_question(category)
+
         chat_history.append({
             "type": "ai",
-            "message": questions[question_index]
+            "message": ai_question
         })
 
-        question_index += 1
+        global current_question
+        current_question = ai_question
 
     if request.method == "POST":
 
@@ -101,25 +99,17 @@ def interview(category):
             "message": user_answer
         })
 
-        if len(user_answer) < 20:
+        ai_reply = evaluate_answer(
+            current_question,
+            user_answer
+)
+        
+        next_question = generate_question(category)
 
-            ai_reply = "Your answer is too short. Try explaining more."
+        current_question = next_question
 
-        else:
+        ai_reply += f"\n\nNext Question:\n{next_question}"
 
-            score += 10
-
-            ai_reply = f"Good answer! 🎉\nCurrent Score: {score}"
-
-        if question_index < len(questions):
-
-            ai_reply += f"\n\nNext Question:\n{questions[question_index]}"
-
-            question_index += 1
-
-        else:
-
-            return redirect("/result")
         chat_history.append({
             "type": "ai",
             "message": ai_reply
@@ -128,9 +118,9 @@ def interview(category):
     answered_questions = max(question_index - 1, 0)
 
     progress = min(
-        int((answered_questions / len(questions)) * 100),
-        100
-    )
+    int((question_count / 5) * 100),
+    100
+)
 
     
     return render_template(
@@ -181,29 +171,71 @@ def history():
 @app.route("/test-ai")
 def test_ai():
 
-    question = generate_question("Python")
+    response = ollama.chat(
+        model="llama3",
+        messages=[
+            {
+                "role": "user",
+                "content": "Ask one Python interview question."
+            }
+        ]
+    )
 
-    return question
-
-@app.route("/resume")
-def resume():
-    return render_template("resume.html")
-
+    return response["message"]["content"]
 
 
 def generate_question(topic):
+
+    response = ollama.chat(
+        model="phi3",
+        messages=[
+            {
+                "role": "user",
+                "content":f"Ask one short {topic} interview question."
+            }
+        ]
+    )
+
+    return response["message"]["content"]
+
+
+
+def evaluate_answer(question, answer):
+
+    global score
 
     response = ollama.chat(
         model="llama3",
         messages=[
             {
                 "role": "user",
-                "content": f"Ask one {topic} interview question only."
+                "content": f"""
+                Interview Question:
+                {question}
+
+                Candidate Answer:
+                {answer}
+
+                Evaluate the answer.
+
+                Give:
+                Score: x/10
+                Feedback:
+                """
             }
         ]
     )
 
+    score += 10
+
     return response["message"]["content"]
+
+
+
+@app.route("/resume")
+def resume():
+    return render_template("resume.html")
+
 
 
 @app.route("/upload", methods=["POST"])
@@ -271,6 +303,8 @@ def upload():
         recommended_category=recommended_category,
         total_skills=total_skills
     )
+
+
 
 
 if __name__ == "__main__":

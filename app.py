@@ -187,11 +187,23 @@ def test_ai():
 def generate_question(topic):
 
     response = ollama.chat(
-        model="phi3",
+        model="llama3",
         messages=[
             {
                 "role": "user",
-                "content":f"Ask one short {topic} interview question."
+                "content": f"""
+                Ask ONLY ONE SHORT {topic} interview question.
+
+                Rules:
+                - Maximum 15 words
+                - No explanation
+                - No answer
+                - No code
+                - No examples
+
+                Example:
+                What is OOP?
+                """
             }
         ]
     )

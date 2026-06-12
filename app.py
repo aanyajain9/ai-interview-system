@@ -4,6 +4,7 @@ import os
 from PyPDF2 import PdfReader
 from db import save_result, get_history, get_stats
 import ollama
+import re
 
 
 app = Flask(__name__)
@@ -121,6 +122,17 @@ def interview(category):
     int((question_count / 5) * 100),
     100
 )
+    
+    ai_reply = evaluate_answer(
+    current_question,
+    user_answer
+)
+    
+
+    match = re.search(r"Score:\s*(\d+)", ai_reply)
+
+    if match:
+        score += int(match.group(1))
 
     
     return render_template(
@@ -214,31 +226,26 @@ def generate_question(topic):
 
 def evaluate_answer(question, answer):
 
-    global score
-
     response = ollama.chat(
-        model="llama3",
+        model="phi3",
         messages=[
             {
                 "role": "user",
                 "content": f"""
-                Interview Question:
-                {question}
+Question: {question}
 
-                Candidate Answer:
-                {answer}
+Answer: {answer}
 
-                Evaluate the answer.
+Evaluate answer.
 
-                Give:
-                Score: x/10
-                Feedback:
-                """
+Return EXACTLY:
+
+Score: x/10
+Feedback: one line
+"""
             }
         ]
     )
-
-    score += 10
 
     return response["message"]["content"]
 

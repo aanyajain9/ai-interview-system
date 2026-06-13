@@ -37,7 +37,6 @@ hr_questions = [
     "Where do you see yourself in 5 years?"
 ]
 
-question_index = 0
 
 current_question = ""
 score = 0
@@ -54,6 +53,7 @@ def home():
     global chat_history
     global question_index
     global score
+    global question_count
 
     chat_history = []
     question_index = 0
@@ -68,16 +68,14 @@ def home():
 )
 
 
-
 @app.route("/interview/<category>", methods=["GET", "POST"])
 def interview(category):
 
     global current_category
-    current_category = category
-
-    global question_index
+    global current_question
     global score
 
+    current_category = category
 
     if len(chat_history) == 0:
 
@@ -88,7 +86,6 @@ def interview(category):
             "message": ai_question
         })
 
-        global current_question
         current_question = ai_question
 
     if request.method == "POST":
@@ -103,8 +100,13 @@ def interview(category):
         ai_reply = evaluate_answer(
             current_question,
             user_answer
-)
-        
+        )
+
+        match = re.search(r"Score:\s*(\d+)", ai_reply)
+
+        if match:
+            score += int(match.group(1))
+
         next_question = generate_question(category)
 
         current_question = next_question
@@ -116,32 +118,14 @@ def interview(category):
             "message": ai_reply
         })
 
-    answered_questions = max(question_index - 1, 0)
+    progress = 0
 
-    progress = min(
-    int((question_count / 5) * 100),
-    100
-)
-    
-    ai_reply = evaluate_answer(
-    current_question,
-    user_answer
-)
-    
-
-    match = re.search(r"Score:\s*(\d+)", ai_reply)
-
-    if match:
-        score += int(match.group(1))
-
-    
     return render_template(
         "interview.html",
         chat_history=chat_history,
         score=score,
         progress=progress
     )
-
 
 @app.route("/result")
 def result():
@@ -184,7 +168,7 @@ def history():
 def test_ai():
 
     response = ollama.chat(
-        model="llama3",
+        model="phi3",
         messages=[
             {
                 "role": "user",
@@ -199,7 +183,7 @@ def test_ai():
 def generate_question(topic):
 
     response = ollama.chat(
-        model="llama3",
+        model="phi3",
         messages=[
             {
                 "role": "user",
@@ -232,17 +216,18 @@ def evaluate_answer(question, answer):
             {
                 "role": "user",
                 "content": f"""
-Question: {question}
+                
+                Question: {question}
 
-Answer: {answer}
+                Answer: {answer}
 
-Evaluate answer.
+                Evaluate answer.
 
-Return EXACTLY:
+                Return EXACTLY:
 
-Score: x/10
-Feedback: one line
-"""
+                Score: x/10
+                Feedback: one line
+                """
             }
         ]
     )

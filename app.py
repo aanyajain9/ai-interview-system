@@ -58,6 +58,7 @@ def home():
     chat_history = []
     question_index = 0
     score = 0
+    question_count=0
     total, highest, average = get_stats()
 
     return render_template(
@@ -74,7 +75,7 @@ def interview(category):
     global current_category
     global current_question
     global score
-
+    global question_count
     current_category = category
 
     if len(chat_history) == 0:
@@ -106,6 +107,9 @@ def interview(category):
 
         if match:
             score += int(match.group(1))
+            question_count+=1
+            if question_count>=5:
+                return redirect("/result")
 
         next_question = generate_question(category)
 

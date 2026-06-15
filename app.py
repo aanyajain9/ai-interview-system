@@ -151,10 +151,12 @@ def result():
     performance
     )
     
+
     return render_template(
     "result.html",
     score=score,
     performance=performance,
+    category=current_category
 )
 
 @app.route("/history")
@@ -211,7 +213,6 @@ def generate_question(topic):
     return response["message"]["content"]
 
 
-
 def evaluate_answer(question, answer):
 
     response = ollama.chat(
@@ -220,17 +221,20 @@ def evaluate_answer(question, answer):
             {
                 "role": "user",
                 "content": f"""
-                
                 Question: {question}
 
                 Answer: {answer}
 
-                Evaluate answer.
+                Evaluate the answer.
 
-                Return EXACTLY:
+                Reply in EXACTLY this format:
 
-                Score: x/10
-                Feedback: one line
+                Score: X/10
+                Feedback: One short sentence only.
+
+                Do not explain.
+                Do not ask another question.
+                Maximum 15 words in feedback.
                 """
             }
         ]

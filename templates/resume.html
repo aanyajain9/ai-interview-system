@@ -1,208 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Upload Resume</title>
-
-    <style>
-
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, sans-serif;
-        }
-
-        body{
-
-            background:#0f172a;
-            color:white;
-            min-height:100vh;
-        }
-
-        .navbar{
-
-            background:#1e293b;
-
-            padding:20px 40px;
-
-            display:flex;
-
-            justify-content:space-between;
-
-            align-items:center;
-        }
-
-        .navbar a{
-
-            color:white;
-
-            text-decoration:none;
-
-            margin-left:20px;
-
-            font-size:18px;
-        }
-
-        .navbar a:hover{
-
-            color:#3b82f6;
-        }
-
-        .container{
-
-            display:flex;
-
-            justify-content:center;
-
-            align-items:center;
-
-            height:80vh;
-        }
-
-        .card{
-
-            background:#1e293b;
-
-            padding:40px;
-
-            border-radius:20px;
-
-            width:500px;
-
-            text-align:center;
-
-            box-shadow:0 0 25px rgba(0,0,0,0.4);
-        }
-
-        h1{
-
-            margin-bottom:15px;
-        }
-
-        p{
-
-            color:lightgray;
-
-            margin-bottom:25px;
-        }
-
-        input[type="file"]{
-
-            width:100%;
-
-            padding:12px;
-
-            background:#334155;
-
-            color:white;
-
-            border:none;
-
-            border-radius:10px;
-
-            margin-bottom:20px;
-        }
-
-        button{
-
-            width:100%;
-
-            padding:14px;
-
-            border:none;
-
-            border-radius:10px;
-
-            background:#3b82f6;
-
-            color:white;
-
-            font-size:18px;
-
-            cursor:pointer;
-        }
-
-        button:hover{
-
-            background:#2563eb;
-        }
-
-        .icon{
-
-            font-size:60px;
-
-            margin-bottom:15px;
-        }
-
-    
-    </style>
-
-</head>
-
-<body>
-
-    <div class="navbar">
-
-        <h2>AI Interview System</h2>
-
-        <div>
-
-            <a href="/">🏠 Home</a>
-
-            <a href="/history">📊 History</a>
-
-            <a href="/resume">📄 Upload Resume</a>
-
-        </div>
-
-    </div>
-
-    <div class="container">
-
-        <div class="card">
-
-            <div class="icon">
-                📄
-            </div>
-
-            <h1>Upload Your Resume</h1>
-
-            <p>
-                Upload your resume and let the system analyze your skills.
-            </p>
-
-            <form
-                action="/upload"
-                method="POST"
-                enctype="multipart/form-data"
+<!DOCTYPE html><html><head>
+    <title>Resume Analyzer</title><style>
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Arial,sans-serif;
+    }
+
+    body{
+        background:linear-gradient(135deg,#0f172a,#1e293b);
+        min-height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .container{
+        background:white;
+        width:500px;
+        padding:40px;
+        border-radius:20px;
+        text-align:center;
+        box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    h1{
+        color:#1e293b;
+        margin-bottom:15px;
+    }
+
+    p{
+        color:#64748b;
+        margin-bottom:25px;
+    }
+
+    .upload-box{
+        border:3px dashed #2563eb;
+        padding:40px;
+        border-radius:15px;
+        margin-bottom:20px;
+        background:#f8fafc;
+    }
+
+    input[type="file"]{
+        margin-top:15px;
+    }
+
+    button{
+        width:100%;
+        padding:12px;
+        background:#2563eb;
+        color:white;
+        border:none;
+        border-radius:10px;
+        font-size:16px;
+        cursor:pointer;
+        transition:0.3s;
+    }
+
+    button:hover{
+        background:#1d4ed8;
+    }
+
+    .back-btn{
+        display:inline-block;
+        margin-top:15px;
+        text-decoration:none;
+        color:#2563eb;
+        font-weight:bold;
+    }
+
+</style>
+
+</head><body><div class="container">
+
+    <h1>📄 AI Resume Analyzer</h1>
+
+    <p>
+        Upload your resume and get skill analysis,
+        interview recommendations and AI insights.
+    </p>
+
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+
+        <div class="upload-box">
+
+            <h3>Choose Resume (PDF)</h3>
+
+            <input
+                type="file"
+                name="resume"
+                accept=".pdf"
+                required
             >
 
-                <input
-                    type="file"
-                    name="resume"
-                    accept=".pdf,.doc,.docx"
-                    required
-                >
-
-                <button type="submit">
-                    Upload Resume 🚀
-                </button>
-
-            </form>
-
         </div>
 
-    </div>
+        <button type="submit">
+            🚀 Analyze Resume
+        </button>
 
+    </form>
 
+    <a href="/" class="back-btn">
+        ← Back to Dashboard
+    </a>
 
 </div>
 
-</body>
-
-</html>
+</body></html>

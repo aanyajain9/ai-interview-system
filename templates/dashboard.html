@@ -99,12 +99,14 @@
             color:#3b82f6;
         }
 
-        .stats-container{
+        .stats{
 
             display:flex;
             justify-content:center;
             gap:20px;
             margin-top:40px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
 
         .stat-card{
@@ -114,6 +116,7 @@
             border-radius:15px;
             width:220px;
             text-align:center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0,1);
         }
 
         .stat-card h2{
@@ -150,22 +153,22 @@
 
     </div>
 
-    <div class="stats-container">
+    <div class="stats",>
 
-        <div class="stat-card">
-            <h2>{{ total_interviews }}</h2>
-            <p>Total Interviews</p>
-        </div>
+    <div class="stat-card">
+        <h2>{{ total }}</h2>
+        <p>Total Interviews</p>
+    </div>
 
-        <div class="stat-card">
-            <h2>{{ highest_score }}</h2>
-            <p>Highest Score</p>
-        </div>
+    <div class="stat-card">
+        <h2>{{ highest }}</h2>
+        <p>Highest Score</p>
+    </div>
 
-        <div class="stat-card">
-            <h2>{{ average_score }}</h2>
-            <p>Average Score</p>
-        </div>
+    <div class="stat-card">
+        <h2>{{ average }}</h2>
+        <p>Average Score</p>
+    </div>
 
     </div>
 

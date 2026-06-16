@@ -308,12 +308,40 @@ def upload():
 
         recommended_category = "Machine Learning"
 
+
+
+    
+    analysis = ollama.chat(
+    model="phi3",
+    messages=[
+        {
+            "role": "user",
+            "content": f"""
+            Analyze this resume:
+
+            {text}
+
+            Give:
+            1. Top Skills
+            2. Strengths
+            3. Weak Areas
+            4. Recommended Job Role
+
+            Keep answer short.
+            """
+                    }
+                ]
+            )
+
+    ai_analysis = analysis["message"]["content"]
+
     return render_template(
         "resumeresult.html",
         resume_text=text,
         skills=detected_skills,
         recommended_category=recommended_category,
-        total_skills=total_skills
+        total_skills=total_skills,
+        ai_analysis=ai_analysis
     )
 
 

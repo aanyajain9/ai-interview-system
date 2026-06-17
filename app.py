@@ -255,10 +255,7 @@ def upload():
 
     file = request.files["resume"]
 
-    filepath = os.path.join(
-        "uploads",
-        file.filename
-    )
+    filepath = os.path.join("uploads", file.filename)
 
     file.save(filepath)
 
@@ -267,85 +264,28 @@ def upload():
     text = ""
 
     for page in pdf.pages:
-
         text += page.extract_text()
 
-    skills_list = [
-        "Python",
-        "SQL",
-        "Machine Learning",
-        "Data Science",
-        "Java",
-        "Flask",
-        "Pandas",
-        "NumPy",
-        "MySQL",
-        "HTML",
-        "CSS",
-        "JavaScript"
-    ]
-    detected_skills = []
-
-    for skill in skills_list:
-
-        if skill.lower() in text.lower():
-
-            detected_skills.append(skill)
-
-    total_skills = len(detected_skills)
-
-    recommended_category = "HR"
-
-    if "Python" in detected_skills:
-
-        recommended_category = "Python"
-
-    elif "SQL" in detected_skills:
-
-        recommended_category = "SQL"
-
-    elif "Machine Learning" in detected_skills:
-
-        recommended_category = "Machine Learning"
-
-
-
-    
+    # AI Analysis
     analysis = ollama.chat(
-    model="phi3",
-    messages=[
-        {
-            "role": "user",
-            "content": f"""
-            Analyze this resume:
-
-            {text}
-
-            Give:
-            1. Top Skills
-            2. Strengths
-            3. Weak Areas
-            4. Recommended Job Role
-
-            Keep answer short.
-            """
-                    }
-                ]
-            )
+        model="phi3",
+        messages=[
+            {
+                "role": "user",
+                "content": f"Analyze this resume:\n\n{text}"
+            }
+        ]
+    )
 
     ai_analysis = analysis["message"]["content"]
 
     return render_template(
         "resumeresult.html",
         resume_text=text,
-        skills=detected_skills,
-        recommended_category=recommended_category,
-        total_skills=total_skills,
         ai_analysis=ai_analysis
     )
 
 
-
-
 if __name__ == "__main__":
     app.run(debug=True)
+
